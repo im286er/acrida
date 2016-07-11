@@ -1,7 +1,19 @@
 # OSChina Android [客户端](http://www.oschina.net/app/)
 
-##写在前面的话
-基于官发开源的代码改写并优化，使用RxJava/RxAndroid/RxBus/RxPermission/Dagger2/Retrofit/OkHttp/Picasso/ButterKnife/XStream(SimpleXML)作为基础库简化代码的编写。
+### 写在前面的话
+基于官发开源代码的改写并优化。
+
+### 使用的开源库
+* RxJava
+* RxAndroid
+* RxBus
+* RxPermission
+* Dagger2
+* Retrofit
+* OkHttp
+* Picasso
+* ButterKnife
+* XStream
 
 ##开源协议
  Copyright (C) 2014, The OSChina Open Source Project
