@@ -1,0 +1,5 @@
+include ':app'
+
+include ':social-sdk'
+project(':social-sdk').projectDir = new File(rootDir, 'library/social-sdk')
+

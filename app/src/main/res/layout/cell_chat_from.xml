@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.gility.acrida.ui.cell.ChatFromCell xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:orientation="horizontal"
+    android:padding="@dimen/space_8">
+
+    <net.gility.acrida.ui.widget.AvatarView
+        android:id="@+id/iv_avatar"
+        style="@style/user_face_image"
+        android:contentDescription="@null" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/space_8"
+        android:layout_marginRight="@dimen/space_8"
+        android:layout_toRightOf="@id/iv_avatar"
+        android:background="?attr/message_bg_left"
+        android:orientation="vertical">
+
+        <net.gility.acrida.ui.widget.TweetTextView
+            android:id="@+id/tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:textColor="?attr/textColor"
+            android:textSize="@dimen/text_size_15"
+            tools:text="聊天内容" />
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_content"
+            android:layout_marginTop="@dimen/space_3"
+            android:textColor="?attr/infoTextColor"
+            android:textSize="10sp"
+            tools:text="时间" />
+    </LinearLayout>
+
+</net.gility.acrida.ui.cell.ChatFromCell>
