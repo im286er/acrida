@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<net.gility.acrida.ui.cell.TweetLikeCell xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/layout_item_bg"
-    android:padding="@dimen/space_8" >
+    android:padding="@dimen/space_8">
 
     <net.gility.acrida.ui.widget.AvatarView
         android:id="@+id/iv_avatar"
@@ -33,8 +33,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tv_name"
-        android:layout_toRightOf="@id/iv_avatar"
         android:layout_marginRight="@dimen/space_10"
+        android:layout_toRightOf="@id/iv_avatar"
         android:text="赞了我的动弹"
         android:textColor="@color/main_gray"
         android:textSize="@dimen/text_size_12"
@@ -48,7 +48,7 @@
         android:layout_marginTop="4dp"
         android:layout_toRightOf="@id/iv_avatar"
         android:background="?attr/comment_reply_container_bg"
-        android:visibility="visible" >
+        android:visibility="visible">
 
         <net.gility.acrida.ui.widget.TweetTextView
             android:id="@+id/tv_reply"
@@ -67,8 +67,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ly_reply"
-        android:layout_marginTop="5dp"
         android:layout_marginRight="@dimen/space_10"
+        android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/iv_avatar"
         android:drawableLeft="@drawable/platform"
         android:drawablePadding="@dimen/space_5"
@@ -77,4 +77,4 @@
         android:textColor="@color/main_gray"
         android:textSize="@dimen/text_size_12" />
 
-</RelativeLayout>
+</net.gility.acrida.ui.cell.TweetLikeCell>

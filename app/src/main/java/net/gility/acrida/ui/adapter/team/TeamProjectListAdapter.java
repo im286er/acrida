@@ -58,7 +58,7 @@ public class TeamProjectListAdapter extends BaseAdapter {
         ViewHolder vh;
         if (convertView == null || convertView.getTag() == null) {
             convertView = View.inflate(parent.getContext(),
-                    R.layout.list_cell_team_project, null);
+                    R.layout.cell_team_project, null);
             vh = new ViewHolder(convertView);
             convertView.setTag(vh);
         } else {

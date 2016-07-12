@@ -5,16 +5,14 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import net.gility.acrida.R;
-import net.gility.acrida.ui.adapter.ListBaseAdapter;
 import net.gility.acrida.content.team.TeamActive;
 import net.gility.acrida.ui.ImagePreviewActivity;
+import net.gility.acrida.ui.adapter.ListBaseAdapter;
+import net.gility.acrida.ui.cell.TeamActiveCell;
 import net.gility.acrida.utils.ImageUtils;
 import net.gility.acrida.utils.StringUtils;
-import net.gility.acrida.ui.widget.AvatarView;
-import net.gility.acrida.ui.widget.TweetTextView;
 
 import org.kymjs.kjframe.KJBitmap;
 import org.kymjs.kjframe.bitmap.BitmapCallBack;
@@ -23,6 +21,8 @@ import org.kymjs.kjframe.bitmap.BitmapCallBack;
  * Team动态界面ListView适配器 (kymjs123@gmail.com)
  * 
  * @author kymjs (https://github.com/kymjs)
+ *
+ * @author Alimy
  * 
  */
 public class TeamActiveAdapter extends ListBaseAdapter<TeamActive> {
@@ -33,47 +33,22 @@ public class TeamActiveAdapter extends ListBaseAdapter<TeamActive> {
         this.context = cxt;
     }
 
-    static class ViewHolder {
-        AvatarView img_head;
-        TextView tv_name;
-        TweetTextView tv_content;
-        TextView tv_client;
-        TextView tv_date;
-        TextView tv_commit;
-        TextView tv_title;
-        ImageView iv_pic;
-    }
-
     @Override
     protected View getRealView(int position, View v, ViewGroup parent) {
         super.getRealView(position, v, parent);
-        ViewHolder holder = null;
-        TeamActive data = mDatas.get(position);
-        if (v == null || v.getTag() == null) {
-            v = View.inflate(context, R.layout.list_cell_team_active, null);
-            holder = new ViewHolder();
-            holder.img_head = (AvatarView) v
-                    .findViewById(R.id.event_listitem_userface);
-            holder.tv_name = (TextView) v
-                    .findViewById(R.id.event_listitem_username);
-            holder.tv_title = (TextView) v.findViewById(R.id.title);
-            holder.tv_content = (TweetTextView) v
-                    .findViewById(R.id.event_listitem_content);
-            holder.tv_client = (TextView) v
-                    .findViewById(R.id.event_listitem_client);
-            holder.iv_pic = (ImageView) v.findViewById(R.id.iv_pic);
-            holder.tv_date = (TextView) v
-                    .findViewById(R.id.event_listitem_date);
-            holder.tv_commit = (TextView) v.findViewById(R.id.tv_comment_count);
-            v.setTag(holder);
-        } else {
-            holder = (ViewHolder) v.getTag();
+
+        if (v == null) {
+            v = View.inflate(context, R.layout.cell_team_active, null);
         }
-        holder.img_head.setAvatarUrl(data.getAuthor().getPortrait());
-        holder.img_head.setUserInfo(data.getAuthor().getId(), data.getAuthor()
+
+        TeamActive data = mDatas.get(position);
+        TeamActiveCell cell = (TeamActiveCell) v;
+
+        cell.img_head.setAvatarUrl(data.getAuthor().getPortrait());
+        cell.img_head.setUserInfo(data.getAuthor().getId(), data.getAuthor()
                 .getName());
-        holder.tv_name.setText(data.getAuthor().getName());
-        setContent(holder.tv_content, stripTags(data.getBody().getTitle()));
+        cell.tv_name.setText(data.getAuthor().getName());
+        setContent(cell.tv_content, stripTags(data.getBody().getTitle()));
 
         String date = StringUtils.friendly_time2(data.getCreateTime());
         String preDate = "";
@@ -82,22 +57,22 @@ public class TeamActiveAdapter extends ListBaseAdapter<TeamActive> {
                     .getCreateTime());
         }
         if (preDate.equals(date)) {
-            holder.tv_title.setVisibility(View.GONE);
+            cell.tv_title.setVisibility(View.GONE);
         } else {
-            holder.tv_title.setText(date);
-            holder.tv_title.setVisibility(View.VISIBLE);
+            cell.tv_title.setText(date);
+            cell.tv_title.setVisibility(View.VISIBLE);
         }
 
-        holder.tv_content.setMaxLines(3);
-        holder.tv_date.setText(StringUtils.friendly_time(data.getCreateTime()));
-        holder.tv_commit.setText(data.getReply());
+        cell.tv_content.setMaxLines(3);
+        cell.tv_date.setText(StringUtils.friendly_time(data.getCreateTime()));
+        cell.tv_commit.setText(data.getReply());
 
         String imgPath = data.getBody().getImage();
         if (!StringUtils.isEmpty(imgPath)) {
-            holder.iv_pic.setVisibility(View.VISIBLE);
-            setTweetImage(holder.iv_pic, imgPath);
+            cell.iv_pic.setVisibility(View.VISIBLE);
+            setTweetImage(cell.iv_pic, imgPath);
         } else {
-            holder.iv_pic.setVisibility(View.GONE);
+            cell.iv_pic.setVisibility(View.GONE);
         }
         return v;
     }

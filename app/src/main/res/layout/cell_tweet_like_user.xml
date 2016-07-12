@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<net.gility.acrida.ui.cell.TweetLikeUserCell xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/fill_wrap"
     android:background="?attr/layout_item_bg"
@@ -20,4 +20,4 @@
         android:textColor="?attr/textColor"
         tools:text="用户名" />
 
-</LinearLayout>
+</net.gility.acrida.ui.cell.TweetLikeUserCell>

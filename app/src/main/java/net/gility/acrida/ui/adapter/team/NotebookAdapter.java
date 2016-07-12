@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.gility.acrida.R;
 import net.gility.acrida.content.NotebookData;
+import net.gility.acrida.ui.cell.NoteBookCell;
 import net.gility.acrida.ui.fragment.team.NoteEditFragment;
 import net.gility.acrida.ui.widget.KJDragGridView.DragGridBaseAdapter;
 
@@ -25,6 +26,8 @@ import android.widget.TextView;
  * 便签列表适配器
  * 
  * @author kymjs (https://github.com/kymjs)
+ *
+ * @author Alimy
  * 
  */
 public class NotebookAdapter extends BaseAdapter implements DragGridBaseAdapter {
@@ -82,59 +85,46 @@ public class NotebookAdapter extends BaseAdapter implements DragGridBaseAdapter 
     }
 
     static class ViewHolder {
-        TextView date;
-        ImageView state;
-        ImageView thumbtack;
-        View titleBar;
-        TextView content;
+
     }
 
     @Override
-    public View getView(int position, View v, ViewGroup parent) {
+    public View getView(int position, View converterView, ViewGroup parent) {
         datas.get(position).setIid(position);
         NotebookData data = datas.get(position);
 
-        ViewHolder holder = null;
-        if (v == null) {
-            holder = new ViewHolder();
-            v = View.inflate(aty, R.layout.item_notebook, null);
-            holder.titleBar = v.findViewById(R.id.item_note_titlebar);
-            holder.date = (TextView) v.findViewById(R.id.item_note_tv_date);
-            holder.state = (ImageView) v.findViewById(R.id.item_note_img_state);
-            holder.thumbtack = (ImageView) v
-                    .findViewById(R.id.item_note_img_thumbtack);
-            holder.content = (TextView) v.findViewById(R.id.item_note_content);
-            v.setTag(holder);
-        } else {
-            holder = (ViewHolder) v.getTag();
+        if (converterView == null) {
+            converterView = View.inflate(aty, R.layout.cell_notebook, null);
         }
 
-        RelativeLayout.LayoutParams params = (LayoutParams) holder.content
+        NoteBookCell cell = (NoteBookCell) converterView;
+
+        RelativeLayout.LayoutParams params = (LayoutParams) cell.content
                 .getLayoutParams();
         params.width = width;
         params.height = (params.width - height);
-        holder.content.setLayoutParams(params);
+        cell.content.setLayoutParams(params);
 
-        holder.titleBar
+        cell.titleBar
                 .setBackgroundColor(NoteEditFragment.sTitleBackGrounds[data
                         .getColor()]);
-        holder.date.setText(data.getDate());
+        cell.date.setText(data.getDate());
         if (data.getId() > 0) {
-            holder.state.setVisibility(View.GONE);
+            cell.state.setVisibility(View.GONE);
         } else {
-            holder.state.setVisibility(View.VISIBLE);
+            cell.state.setVisibility(View.VISIBLE);
         }
-        holder.thumbtack.setImageResource(NoteEditFragment.sThumbtackImgs[data
+        cell.thumbtack.setImageResource(NoteEditFragment.sThumbtackImgs[data
                 .getColor()]);
-        holder.content.setText(Html.fromHtml(data.getContent()));
-        holder.content.setBackgroundColor(NoteEditFragment.sBackGrounds[data
+        cell.content.setText(Html.fromHtml(data.getContent()));
+        cell.content.setBackgroundColor(NoteEditFragment.sBackGrounds[data
                 .getColor()]);
         if (position == currentHidePosition) {
-            v.setVisibility(View.GONE);
+            cell.setVisibility(View.GONE);
         } else {
-            v.setVisibility(View.VISIBLE);
+            cell.setVisibility(View.VISIBLE);
         }
-        return v;
+        return cell;
     }
 
     @Override

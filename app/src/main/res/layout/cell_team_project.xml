@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<net.gility.acrida.ui.cell.TeamProjectCell xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/fill_wrap"
     android:background="?attr/layout_item_bg"
     android:gravity="center|left"
@@ -33,4 +33,4 @@
         android:textColor="?attr/infoTextColor"
         android:text="0/0" />
 
-</RelativeLayout>
+</net.gility.acrida.ui.cell.TeamProjectCell>

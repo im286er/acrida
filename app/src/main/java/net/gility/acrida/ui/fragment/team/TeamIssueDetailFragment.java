@@ -562,7 +562,7 @@ public class TeamIssueDetailFragment extends BaseFragment implements
 
     private void addComment(final TeamReply reply) {
         View cell = LayoutInflater.from(getActivity()).inflate(
-                R.layout.list_cell_team_reply, null, false);
+                R.layout.cell_team_reply, null, false);
         AvatarView avatarView = (AvatarView) cell.findViewById(R.id.iv_avatar);
         avatarView.setAvatarUrl(reply.getAuthor().getPortrait());
         TextView name = (TextView) cell.findViewById(R.id.tv_name);

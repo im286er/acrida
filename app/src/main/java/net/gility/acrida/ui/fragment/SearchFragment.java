@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 
-import net.gility.acrida.ui.adapter.SearchAdapter;
+import net.gility.acrida.ui.adapter.SearchResultAdapter;
 import net.gility.acrida.network.OSChinaApi;
 import net.gility.acrida.content.SearchList;
 import net.gility.acrida.content.SearchResult;
@@ -52,8 +52,8 @@ public class SearchFragment extends BaseListFragment<SearchResult> {
     }
 
     @Override
-    protected SearchAdapter getListAdapter() {
-        return new SearchAdapter();
+    protected SearchResultAdapter getListAdapter() {
+        return new SearchResultAdapter();
     }
 
     @Override

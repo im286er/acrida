@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<net.gility.acrida.ui.cell.TeamReplyCell xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/layout_item_bg"
@@ -63,4 +63,4 @@
         android:visibility="visible" >
     </LinearLayout>
 
-</RelativeLayout>
+</net.gility.acrida.ui.cell.TeamReplyCell>
