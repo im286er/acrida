@@ -1,17 +1,17 @@
 # OSChina Android [客户端](http://www.oschina.net/app/)
 
-## 写在前面的话:
+### 写在前面的话
 
 基于官方开源代码的改写并优化。
 
-## 截图:
+### 截图
 |  |  |  |
 |:-------------:|:-------:|:-------:|
 |![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/1.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/2.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/3.png)|
 |![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/4.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/5.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/6.png)|
 |![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/7.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/8.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/9.png)|
 
-## 使用的开源库:
+### 使用的开源库
 * RxJava
 * RxAndroid
 * RxBus
@@ -23,7 +23,7 @@
 * ButterKnife
 * XStream
 
-## 开源协议:
+### 开源协议
  Copyright (C) 2014, The OSChina Open Source Project
 
 This program is free software; you can redistribute it and/or modify
