@@ -3,6 +3,14 @@
 ### 写在前面的话
 基于官发开源代码的改写并优化。
 
+### 截图
+
+|  |  |  |
+|:-------------:|:-------:|:-------:|:--------|
+|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/1.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/2.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/3.png)|
+|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/4.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/5.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/6.png)|
+|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/7.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/8.png)|![](https://raw.githubusercontent.com/alimy/acrida/master/app/art/9.png)|
+
 ### 使用的开源库
 * RxJava
 * RxAndroid
