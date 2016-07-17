@@ -10,10 +10,10 @@ import com.loopj.android.http.PersistentCookieStore;
 
 import net.gility.acrida.BuildConfig;
 import net.gility.acrida.config.AppConfig;
+import net.gility.acrida.content.User;
 import net.gility.acrida.dagger.Injector;
 import net.gility.acrida.model.AppException;
 import net.gility.acrida.model.Constants;
-import net.gility.acrida.content.User;
 import net.gility.acrida.network.ApiHttpClient;
 import net.gility.acrida.network.OSChinaService;
 import net.gility.acrida.storage.DataCleanManager;

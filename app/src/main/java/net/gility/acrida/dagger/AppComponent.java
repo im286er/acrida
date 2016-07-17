@@ -18,7 +18,8 @@ import dagger.Component;
                 AppModule.class,
                 ApiModule.class,
                 DataModule.class,
-                UiModule.class
+                UiModule.class,
+                BindModule.class
         }
 )
 public interface AppComponent {

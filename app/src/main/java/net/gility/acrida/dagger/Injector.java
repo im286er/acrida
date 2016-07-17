@@ -9,13 +9,13 @@ import net.gility.acrida.android.ApplicationLoader;
 
 public class Injector {
 
-    static class SingletonInstance {
-        static final AppComponent component = DaggerAppComponent.builder()
+    private static class SingletonInstance {
+        static final AppComponent appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(ApplicationLoader.instance))
                 .build();
     }
 
     static public AppComponent obtain() {
-        return SingletonInstance.component;
+        return SingletonInstance.appComponent;
     }
 }

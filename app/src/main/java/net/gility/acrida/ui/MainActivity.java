@@ -27,10 +27,12 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.gility.acrida.R;
 import net.gility.acrida.android.ApplicationLoader;
 import net.gility.acrida.config.AppConfig;
+import net.gility.acrida.dagger.Injector;
 import net.gility.acrida.model.Constants;
 import net.gility.acrida.model.MainTab;
 import net.gility.acrida.content.Notice;
@@ -48,6 +50,10 @@ import net.gility.acrida.ui.widget.BadgeView;
 import net.gility.acrida.ui.widget.MyFragmentTabHost;
 import net.gility.acrida.utils.NoticeUtils;
 import net.gility.acrida.utils.UIHelper;
+
+import java.util.Random;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,6 +86,8 @@ public class MainActivity extends ActionBarActivity implements
 
     @BindView(R.id.quick_option_iv)
     View mAddBt;
+
+    @Inject Random mRandom;
 
     private BadgeView mBvNotice;
 
@@ -128,6 +136,8 @@ public class MainActivity extends ActionBarActivity implements
         }
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        Injector.obtain().inject(this);
+
         initView();
         AppManager.getInstance().addActivity(this);
 
