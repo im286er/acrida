@@ -1,6 +1,7 @@
 package net.gility.acrida.android;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
@@ -9,10 +10,12 @@ import com.loopj.android.http.PersistentCookieStore;
 
 import net.gility.acrida.BuildConfig;
 import net.gility.acrida.config.AppConfig;
+import net.gility.acrida.dagger.Injector;
 import net.gility.acrida.model.AppException;
 import net.gility.acrida.model.Constants;
 import net.gility.acrida.content.User;
 import net.gility.acrida.network.ApiHttpClient;
+import net.gility.acrida.network.OSChinaService;
 import net.gility.acrida.storage.DataCleanManager;
 import net.gility.acrida.utils.CyptoUtils;
 import net.gility.acrida.utils.MethodsCompat;
@@ -25,6 +28,8 @@ import org.kymjs.kjframe.bitmap.BitmapConfig;
 import org.kymjs.kjframe.utils.KJLoger;
 
 import java.util.Properties;
+
+import javax.inject.Inject;
 
 import static net.gility.acrida.config.AppConfig.KEY_FRITST_START;
 import static net.gility.acrida.config.AppConfig.KEY_LOAD_IMAGE;
@@ -48,12 +53,20 @@ public class ApplicationLoader extends BaseApplication {
 
     private boolean login;
 
+    @Inject ActivityHierarchyServer activityHierarchyServer;
+    @Inject OSChinaService osChinaService;
+    @Inject SharedPreferences preferences;
+
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         init();
         initLogin();
+
+        Injector.obtain().inject(this);
+
+        registerActivityLifecycleCallbacks(activityHierarchyServer);
 
         Thread.setDefaultUncaughtExceptionHandler(AppException
                 .getAppExceptionHandler(this));
