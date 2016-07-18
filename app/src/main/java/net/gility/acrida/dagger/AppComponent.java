@@ -1,7 +1,10 @@
 package net.gility.acrida.dagger;
 
 import net.gility.acrida.android.ApplicationLoader;
+import net.gility.acrida.android.BaseApplication;
+import net.gility.acrida.ui.AppBaseActivity;
 import net.gility.acrida.ui.MainActivity;
+import net.gility.acrida.ui.fragment.SettingsFragment;
 
 import javax.inject.Singleton;
 
@@ -19,10 +22,13 @@ import dagger.Component;
                 ApiModule.class,
                 DataModule.class,
                 UiModule.class,
-                BindModule.class
+                BindModule.class,
+                UtilsModule.class
         }
 )
 public interface AppComponent {
     void inject(MainActivity mainActivity);
     void inject(ApplicationLoader applicationLoader);
+    void inject(BaseApplication baseApplication);
+    void inject(SettingsFragment settingsFragment);
 }

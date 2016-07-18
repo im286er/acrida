@@ -157,7 +157,7 @@ public class BadgeView extends TextView {
             this.target = target;
 
             ((ViewGroup) target).addView(container, new LayoutParams(
-                    LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+                    LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
             this.setVisibility(View.GONE);
             container.addView(this);

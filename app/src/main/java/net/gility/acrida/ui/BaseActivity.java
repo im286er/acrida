@@ -54,7 +54,7 @@ public abstract class BaseActivity extends ActionBarActivity implements
         } else {
             setTheme(R.style.AppBaseTheme_Light);
         }
-        AppManager.getInstance().addActivity(this);
+        AppManager.obtain().addActivity(this);
         if (!hasActionBar()) {
             // supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         }

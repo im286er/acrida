@@ -16,12 +16,12 @@ public class AppManager {
 
     private static Stack<Activity> activityStack;
 
-    private AppManager() {}
+    public AppManager() {}
 
     /**
      * 单一实例
      */
-    public static AppManager getInstance() {
+    public static AppManager obtain() {
         return AppManagerHolder.instance;
     }
 
@@ -105,7 +105,7 @@ public class AppManager {
     /**
      * 退出应用程序
      */
-    public void AppExit(Context context) {
+    public void AppExit() {
         try {
             finishAllActivity();
             // 杀死该应用进程

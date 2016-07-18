@@ -162,8 +162,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler 
             if (!success) {
                 return false;
             } else {
-                final Context context = AppManager.getInstance()
-                        .currentActivity();
+                final Context context = AppManager.obtain().currentActivity();
                 // 显示异常信息&发送报告
                 new Thread() {
                     @Override

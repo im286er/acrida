@@ -1,6 +1,7 @@
 package net.gility.acrida.ui.fragment;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import net.gility.acrida.R;
 import net.gility.acrida.android.ApplicationLoader;
 import net.gility.acrida.config.AppConfig;
+import net.gility.acrida.dagger.Injector;
 import net.gility.acrida.manager.AppManager;
 import net.gility.acrida.ui.widget.togglebutton.ToggleButton;
 import net.gility.acrida.ui.widget.togglebutton.ToggleButton.OnToggleChanged;
@@ -22,6 +24,8 @@ import net.gility.acrida.utils.UIHelper;
 import org.kymjs.kjframe.bitmap.BitmapConfig;
 
 import java.io.File;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +46,15 @@ public class SettingsFragment extends BaseFragment {
     TextView mTvExit;
     @BindView(R.id.tb_double_click_exit)
     ToggleButton mTbDoubleClickExit;
+
+    @Inject SharedPreferences mPreferences;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Injector.obtain().inject(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -164,10 +177,7 @@ public class SettingsFragment extends BaseFragment {
     }
 
     private void onClickExit() {
-        ApplicationLoader
-                .set(AppConfig.KEY_NOTIFICATION_DISABLE_WHEN_EXIT,
-                        false);
-        AppManager.getInstance().AppExit(getActivity());
-        getActivity().finish();
+        mPreferences.edit().putBoolean(AppConfig.KEY_NOTIFICATION_DISABLE_WHEN_EXIT, false);
+        AppManager.obtain().AppExit();
     }
 }

@@ -15,10 +15,14 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
  * Created by Michael Li on 7/17/16.
  */
 
-@Module
+@Module(
+        includes = {
+                AppModule.class
+        }
+)
 public class ApiModule {
     @Provides @Singleton
-    Retrofit provideRetrofit(OkHttpClient okHttpClient) {
+    static Retrofit provideRetrofit(OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl("http://www.oschina.net")
                 .client(okHttpClient)
@@ -27,12 +31,7 @@ public class ApiModule {
     }
 
     @Provides @Singleton
-    OkHttpClient provideOkHttpClient() {
-        return new OkHttpClient();
-    }
-
-    @Provides @Singleton
-    OSChinaService provideOSChinaService(Retrofit retrofit) {
+    static OSChinaService provideOSChinaService(Retrofit retrofit) {
         return retrofit.create(OSChinaService.class);
     }
 }

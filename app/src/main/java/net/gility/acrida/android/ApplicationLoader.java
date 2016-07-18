@@ -53,27 +53,30 @@ public class ApplicationLoader extends BaseApplication {
 
     private boolean login;
 
-    @Inject ActivityHierarchyServer activityHierarchyServer;
-    @Inject OSChinaService osChinaService;
-    @Inject SharedPreferences preferences;
+    @Inject ActivityHierarchyServer mActivityHierarchyServer;
+    @Inject OSChinaService mOsChinaService;
+    @Inject SharedPreferences mPreferences;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = this;
-        init();
-        initLogin();
 
+        Injector.initStatic(this);
         Injector.obtain().inject(this);
 
-        registerActivityLifecycleCallbacks(activityHierarchyServer);
-
-        Thread.setDefaultUncaughtExceptionHandler(AppException
-                .getAppExceptionHandler(this));
-        UIHelper.sendBroadcastForNotice(this);
+        init();
+        initLogin();
     }
 
     private void init() {
+        instance = this;
+        checkFirstStart();
+
+        registerActivityLifecycleCallbacks(mActivityHierarchyServer);
+        Thread.setDefaultUncaughtExceptionHandler(AppException
+                .getAppExceptionHandler(this));
+        UIHelper.sendBroadcastForNotice(this);
+
         // 初始化网络请求
         AsyncHttpClient client = new AsyncHttpClient();
         PersistentCookieStore myCookieStore = new PersistentCookieStore(this);
@@ -87,6 +90,13 @@ public class ApplicationLoader extends BaseApplication {
 
         // Bitmap缓存地址
         BitmapConfig.CACHEPATH = "OSChina/imagecache";
+    }
+
+    private void checkFirstStart() {
+        if (mPreferences.getBoolean(KEY_FRITST_START, false)) {
+            DataCleanManager.cleanInternalCache(ApplicationLoader.getInstance());
+            mPreferences.edit().putBoolean(KEY_FRITST_START, false).apply();
+        }
     }
 
     private void initLogin() {
@@ -325,14 +335,6 @@ public class ApplicationLoader extends BaseApplication {
 
     public static void setNoteDraft(String draft) {
         set(AppConfig.KEY_NOTE_DRAFT + getInstance().getLoginUid(), draft);
-    }
-
-    public static boolean isFristStart() {
-        return getPreferences().getBoolean(KEY_FRITST_START, true);
-    }
-
-    public static void setFristStart(boolean frist) {
-        set(KEY_FRITST_START, frist);
     }
 
     //夜间模式

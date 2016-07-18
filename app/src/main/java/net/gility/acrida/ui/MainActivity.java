@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -27,23 +26,22 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import net.gility.acrida.R;
 import net.gility.acrida.android.ApplicationLoader;
 import net.gility.acrida.config.AppConfig;
+import net.gility.acrida.content.Notice;
 import net.gility.acrida.dagger.Injector;
+import net.gility.acrida.manager.UpdateManager;
 import net.gility.acrida.model.Constants;
 import net.gility.acrida.model.MainTab;
-import net.gility.acrida.content.Notice;
 import net.gility.acrida.model.SimpleBackPage;
-import net.gility.acrida.manager.AppManager;
-import net.gility.acrida.manager.UpdateManager;
-import net.gility.acrida.storage.DataCleanManager;
+import net.gility.acrida.network.OSChinaService;
 import net.gility.acrida.ui.dialog.QuickOptionDialog;
 import net.gility.acrida.ui.fragment.MyInformationFragment;
 import net.gility.acrida.ui.fragment.NavigationDrawerFragment;
-import net.gility.acrida.ui.help.BaseViewInterface;
 import net.gility.acrida.ui.help.DoubleClickExitHelper;
 import net.gility.acrida.ui.help.OnTabReselectListener;
 import net.gility.acrida.ui.widget.BadgeView;
@@ -56,18 +54,13 @@ import java.util.Random;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 // import com.networkbench.agent.impl.NBSAppAgent;
 
 @SuppressLint("InflateParams")
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class MainActivity extends ActionBarActivity implements
+public class MainActivity extends InjectActivity implements
         NavigationDrawerFragment.NavigationDrawerCallbacks,
-        OnTabChangeListener, BaseViewInterface, View.OnClickListener,
-        OnTouchListener {
-
-    private DoubleClickExitHelper mDoubleClickExit;
+        OnTabChangeListener, View.OnClickListener, OnTouchListener {
 
     /**
      * Used to store the last screen title. For use in
@@ -87,59 +80,21 @@ public class MainActivity extends ActionBarActivity implements
     @BindView(R.id.quick_option_iv)
     View mAddBt;
 
-    @Inject Random mRandom;
+    @Inject DoubleClickExitHelper mDoubleClickExit;
 
     private BadgeView mBvNotice;
 
     public static Notice mNotice;
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals(Constants.INTENT_ACTION_NOTICE)) {
-                mNotice = (Notice) intent.getSerializableExtra("notice_bean");
-                int atmeCount = mNotice.getAtmeCount();// @我
-                int msgCount = mNotice.getMsgCount();// 留言
-                int reviewCount = mNotice.getReviewCount();// 评论
-                int newFansCount = mNotice.getNewFansCount();// 新粉丝
-                int newLikeCount = mNotice.getNewLikeCount();// 收到赞
-                int activeCount = atmeCount + reviewCount + msgCount
-                        + newFansCount + newLikeCount;
-
-                Fragment fragment = getCurrentFragment();
-                if (fragment instanceof MyInformationFragment) {
-                    ((MyInformationFragment) fragment).setNotice();
-                } else {
-                    if (activeCount > 0) {
-                        mBvNotice.setText(activeCount + "");
-                        mBvNotice.show();
-                    } else {
-                        mBvNotice.hide();
-                        mNotice = null;
-                    }
-                }
-            } else if (intent.getAction()
-                    .equals(Constants.INTENT_ACTION_LOGOUT)) {
-                mBvNotice.hide();
-                mNotice = null;
-            }
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (ApplicationLoader.getNightModeSwitch()) {
-            setTheme(R.style.AppBaseTheme_Night);
-        } else {
-            setTheme(R.style.AppBaseTheme_Light);
-        }
+
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+
         Injector.obtain().inject(this);
 
         initView();
-        AppManager.getInstance().addActivity(this);
 
         handleIntent(getIntent());
         // 注册听云的检测分析
@@ -154,13 +109,133 @@ public class MainActivity extends ActionBarActivity implements
         handleIntent(intent);
     }
 
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // TODO Auto-generated method stub
+        // 当 API Level > 11 调用这个方法可能导致奔溃（android.os.Build.VERSION.SDK_INT > 11）
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        NoticeUtils.unbindFromService(this);
+        unregisterReceiver(mReceiver);
+        mReceiver = null;
+        NoticeUtils.tryToShutDown(this);
+    }
+
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        // update the main content by replacing fragments
+    }
+
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(mTitle);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_activity_menu, menu);
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            restoreActionBar();
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.search:
+                UIHelper.showSimpleBack(this, SimpleBackPage.SEARCH);
+                break;
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        super.onTouchEvent(event);
+        boolean consumed = false;
+        // use getTabHost().getCurrentTabView to decide if the current tab is
+        // touched again
+        if (event.getAction() == MotionEvent.ACTION_DOWN
+                && v.equals(mTabHost.getCurrentTabView())) {
+            // use getTabHost().getCurrentView() to get a handle to the view
+            // which is displayed in the tab - and to get this views context
+            Fragment currentFragment = getCurrentFragment();
+            if (currentFragment != null
+                    && currentFragment instanceof OnTabReselectListener) {
+                OnTabReselectListener listener = (OnTabReselectListener) currentFragment;
+                listener.onTabReselect();
+                consumed = true;
+            }
+        }
+        return consumed;
+    }
+
+    @Override
+    public void onTabChanged(String tabId) {
+        final int size = mTabHost.getTabWidget().getTabCount();
+        for (int i = 0; i < size; i++) {
+            View v = mTabHost.getTabWidget().getChildAt(i);
+            if (i == mTabHost.getCurrentTab()) {
+                v.setSelected(true);
+            } else {
+                v.setSelected(false);
+            }
+        }
+        if (tabId.equals(getString(MainTab.ME.getResName()))) {
+            mBvNotice.setText("");
+            mBvNotice.hide();
+        }
+        supportInvalidateOptionsMenu();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            // 点击了快速操作按钮
+            case R.id.quick_option_iv:
+                showQuickOption();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 监听返回--是否退出程序
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // 是否退出应用
+            if (ApplicationLoader.get(AppConfig.KEY_DOUBLE_CLICK_EXIT, true)) {
+                return mDoubleClickExit.onKeyDown(keyCode, event);
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
     /**
      * 处理传进来的intent
-     * 
-     * @author 火蚁 2015-1-28 下午3:48:44
-     * 
-     * @return void
+     *
      * @param intent
+     * @return void
+     * @author 火蚁 2015-1-28 下午3:48:44
      */
     private void handleIntent(Intent intent) {
         if (intent == null)
@@ -175,7 +250,7 @@ public class MainActivity extends ActionBarActivity implements
 
     /**
      * 从通知栏点击的时候相应
-     * 
+     *
      * @param fromWhich
      */
     private void notifitcationBarClick(Intent fromWhich) {
@@ -190,9 +265,7 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
-    @Override
-    public void initView() {
-        mDoubleClickExit = new DoubleClickExitHelper(this);
+    private void initView() {
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -219,12 +292,6 @@ public class MainActivity extends ActionBarActivity implements
         registerReceiver(mReceiver, filter);
         NoticeUtils.bindToService(this);
 
-        if (ApplicationLoader.isFristStart()) {
-            mNavigationDrawerFragment.openDrawerMenu();
-            DataCleanManager.cleanInternalCache(ApplicationLoader.getInstance());
-            ApplicationLoader.setFristStart(false);
-        }
-
         //自定义版本，不要从官网更新
         //checkUpdate();
     }
@@ -241,20 +308,6 @@ public class MainActivity extends ActionBarActivity implements
                 new UpdateManager(MainActivity.this, false).checkUpdate();
             }
         }, 2000);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        NoticeUtils.unbindFromService(this);
-        unregisterReceiver(mReceiver);
-        mReceiver = null;
-        NoticeUtils.tryToShutDown(this);
-    }
-
-    @Override
-    public void initData() {
-
     }
 
     private void initTabs() {
@@ -297,73 +350,6 @@ public class MainActivity extends ActionBarActivity implements
         }
     }
 
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-    }
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_activity_menu, menu);
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            restoreActionBar();
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-        case R.id.search:
-            UIHelper.showSimpleBack(this, SimpleBackPage.SEARCH);
-            break;
-
-        default:
-            break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onTabChanged(String tabId) {
-        final int size = mTabHost.getTabWidget().getTabCount();
-        for (int i = 0; i < size; i++) {
-            View v = mTabHost.getTabWidget().getChildAt(i);
-            if (i == mTabHost.getCurrentTab()) {
-                v.setSelected(true);
-            } else {
-                v.setSelected(false);
-            }
-        }
-        if (tabId.equals(getString(MainTab.ME.getResName()))) {
-            mBvNotice.setText("");
-            mBvNotice.hide();
-        }
-        supportInvalidateOptionsMenu();
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-        // 点击了快速操作按钮
-        case R.id.quick_option_iv:
-            showQuickOption();
-            break;
-        default:
-            break;
-        }
-    }
-
     // 显示快速操作界面
     private void showQuickOption() {
         final QuickOptionDialog dialog = new QuickOptionDialog(
@@ -373,50 +359,41 @@ public class MainActivity extends ActionBarActivity implements
         dialog.show();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        super.onTouchEvent(event);
-        boolean consumed = false;
-        // use getTabHost().getCurrentTabView to decide if the current tab is
-        // touched again
-        if (event.getAction() == MotionEvent.ACTION_DOWN
-                && v.equals(mTabHost.getCurrentTabView())) {
-            // use getTabHost().getCurrentView() to get a handle to the view
-            // which is displayed in the tab - and to get this views context
-            Fragment currentFragment = getCurrentFragment();
-            if (currentFragment != null
-                    && currentFragment instanceof OnTabReselectListener) {
-                OnTabReselectListener listener = (OnTabReselectListener) currentFragment;
-                listener.onTabReselect();
-                consumed = true;
-            }
-        }
-        return consumed;
-    }
-
     private Fragment getCurrentFragment() {
         return getSupportFragmentManager().findFragmentByTag(
                 mTabHost.getCurrentTabTag());
     }
 
-    /**
-     * 监听返回--是否退出程序
-     */
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // 是否退出应用
-            if (ApplicationLoader.get(AppConfig.KEY_DOUBLE_CLICK_EXIT, true)) {
-                return mDoubleClickExit.onKeyDown(keyCode, event);
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.INTENT_ACTION_NOTICE)) {
+                mNotice = (Notice) intent.getSerializableExtra("notice_bean");
+                int atmeCount = mNotice.getAtmeCount();// @我
+                int msgCount = mNotice.getMsgCount();// 留言
+                int reviewCount = mNotice.getReviewCount();// 评论
+                int newFansCount = mNotice.getNewFansCount();// 新粉丝
+                int newLikeCount = mNotice.getNewLikeCount();// 收到赞
+                int activeCount = atmeCount + reviewCount + msgCount
+                        + newFansCount + newLikeCount;
+
+                Fragment fragment = getCurrentFragment();
+                if (fragment instanceof MyInformationFragment) {
+                    ((MyInformationFragment) fragment).setNotice();
+                } else {
+                    if (activeCount > 0) {
+                        mBvNotice.setText(activeCount + "");
+                        mBvNotice.show();
+                    } else {
+                        mBvNotice.hide();
+                        mNotice = null;
+                    }
+                }
+            } else if (intent.getAction()
+                    .equals(Constants.INTENT_ACTION_LOGOUT)) {
+                mBvNotice.hide();
+                mNotice = null;
             }
         }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // TODO Auto-generated method stub
-        // 当 API Level > 11 调用这个方法可能导致奔溃（android.os.Build.VERSION.SDK_INT > 11）
-    }
+    };
 }

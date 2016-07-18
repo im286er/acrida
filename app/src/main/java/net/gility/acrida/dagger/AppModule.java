@@ -10,10 +10,11 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 
 /**
  * @author Alimy
- * Created by Michael Li on 7/17/16.
+ *         Created by Michael Li on 7/17/16.
  */
 
 @Module
@@ -25,7 +26,7 @@ public class AppModule {
     }
 
     @Provides @Singleton
-    ApplicationLoader provideApplication() {
+    public ApplicationLoader provideApplication() {
         return application;
     }
 
@@ -33,4 +34,10 @@ public class AppModule {
     ClipboardManager provideClipboardManager(Application application) {
         return (ClipboardManager) application.getSystemService(Context.CLIPBOARD_SERVICE);
     }
+
+    @Provides @Singleton
+    public OkHttpClient provideOkHttpClient() {
+        return new OkHttpClient();
+    }
+
 }

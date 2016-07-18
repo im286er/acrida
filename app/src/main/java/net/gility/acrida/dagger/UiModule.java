@@ -1,12 +1,11 @@
 package net.gility.acrida.dagger;
 
-import android.app.Application;
-
 import com.hwangjr.rxbus.Bus;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import net.gility.acrida.android.ActivityHierarchyServer;
+import net.gility.acrida.android.ApplicationLoader;
 
 import javax.inject.Singleton;
 
@@ -19,7 +18,11 @@ import okhttp3.OkHttpClient;
  * Created by Michael Li on 7/17/16.
  */
 
-@Module
+@Module(
+        includes = {
+                AppModule.class
+        }
+)
 public class UiModule {
 
     @Provides @Singleton
@@ -33,7 +36,7 @@ public class UiModule {
     }
 
     @Provides @Singleton
-    Picasso providePicasso(Application app, OkHttpClient client) {
+    Picasso providePicasso(ApplicationLoader app, OkHttpClient client) {
         return new Picasso.Builder(app)
                 .downloader(new OkHttp3Downloader(client))
                 .build();

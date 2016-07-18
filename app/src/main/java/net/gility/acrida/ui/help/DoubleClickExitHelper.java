@@ -1,30 +1,32 @@
 package net.gility.acrida.ui.help;
 
-import net.gility.acrida.manager.AppManager;
-import net.gility.acrida.R;
-import android.app.Activity;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import net.gility.acrida.R;
+import net.gility.acrida.manager.AppManager;
+
 
 /***
  * 双击退出
  * @author FireAnt（http://my.oschina.net/LittleDY）
+ * @author Alimy
  * @created 2015年1月5日 下午7:07:44
  *
  */
 public class DoubleClickExitHelper {
 
-	private final Activity mActivity;
+	private final Context mContext;
 	
 	private boolean isOnKeyBacking;
 	private Handler mHandler;
 	private Toast mBackToast;
 	
-	public DoubleClickExitHelper(Activity activity) {
-		mActivity = activity;
+	public DoubleClickExitHelper(Context context) {
+		mContext = context;
 		mHandler = new Handler(Looper.getMainLooper());
 	}
 	
@@ -41,12 +43,12 @@ public class DoubleClickExitHelper {
 				mBackToast.cancel();
 			}
 			// 退出
-			AppManager.getInstance().AppExit(mActivity);
+			AppManager.obtain().AppExit();
 			return true;
 		} else {
 			isOnKeyBacking = true;
 			if(mBackToast == null) {
-				mBackToast = Toast.makeText(mActivity, R.string.tip_double_click_exit, 2000);
+				mBackToast = Toast.makeText(mContext, R.string.tip_double_click_exit, 2000);
 			}
 			mBackToast.show();
 			mHandler.postDelayed(onBackTimeRunnable, 2000);

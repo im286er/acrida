@@ -20,9 +20,11 @@ import android.widget.Toast;
 import net.gility.acrida.R;
 import net.gility.acrida.utils.StringUtils;
 
+import javax.inject.Inject;
+
 @SuppressLint("InflateParams")
 public class BaseApplication extends Application {
-    private static String PREF_NAME = "creativelocker.pref";
+    public static String PREF_NAME = "creativelocker.pref";
     private static String LAST_REFRESH_TIME = "last_refresh_time.pref";
     static Context _context;
     static Resources _resource;

@@ -1,6 +1,5 @@
 package net.gility.acrida.dagger;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import net.gility.acrida.android.ApplicationLoader;
@@ -20,8 +19,8 @@ import dagger.Provides;
 @Module
 public class DataModule {
     @Provides @Singleton
-    SharedPreferences provideSharedPreferences(ApplicationLoader application) {
-        return application.getSharedPreferences("application", Context.MODE_PRIVATE);
+    SharedPreferences provideSharedPreferences() {
+        return  ApplicationLoader.getPreferences();
     }
 
     @Provides
