@@ -9,6 +9,7 @@ import dagger.Provides;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import unisx.retrofit2.converter.xstream.XStreamConverterFactory;
 
 /**
  * @author Alimy
@@ -27,6 +28,7 @@ public class ApiModule {
                 .baseUrl("http://www.oschina.net")
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(XStreamConverterFactory.create())
                 .build();
     }
 
