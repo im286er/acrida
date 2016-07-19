@@ -3,3 +3,5 @@ include ':app'
 include ':social-sdk'
 project(':social-sdk').projectDir = new File(rootDir, 'library/social-sdk')
 
+include ':converter-xstream'
+project(':converter-xstream').projectDir = new File(rootDir, 'library/converter-xstream')
