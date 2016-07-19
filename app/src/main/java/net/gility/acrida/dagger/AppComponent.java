@@ -4,6 +4,7 @@ import net.gility.acrida.android.ApplicationLoader;
 import net.gility.acrida.android.BaseApplication;
 import net.gility.acrida.ui.AppBaseActivity;
 import net.gility.acrida.ui.MainActivity;
+import net.gility.acrida.ui.fragment.RtfNewsFragment;
 import net.gility.acrida.ui.fragment.SettingsFragment;
 
 import javax.inject.Singleton;
@@ -31,4 +32,5 @@ public interface AppComponent {
     void inject(ApplicationLoader applicationLoader);
     void inject(BaseApplication baseApplication);
     void inject(SettingsFragment settingsFragment);
+    void inject(RtfNewsFragment rtfNewsFragment);
 }

@@ -160,6 +160,6 @@ public class Acrida {
     }
 
     private static class Client {
-        final static OSChinaService instance = RetrofitHolder.instance.create(OSChinaService.class);
+        final static OSChinaCallService instance = RetrofitHolder.instance.create(OSChinaCallService.class);
     }
 }
