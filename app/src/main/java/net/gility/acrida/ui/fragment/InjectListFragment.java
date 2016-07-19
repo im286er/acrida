@@ -254,13 +254,20 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
                         .observeOn(AndroidSchedulers.mainThread())
                         .lift(mHandleErrorOperator)
                         .doOnError(throwable -> {
-
+                            if (throwable instanceof HttpException)
+                                onHttpException((HttpException) throwable);
                         })
                         .doOnNext(data -> {
                             saveCacheData(getCacheKey(), data);
-                        })
-                        .doOnTerminate(() -> {
-
+                            if (mCurrentPage == 0 && needAutoRefresh()) {
+                                ApplicationLoader.putToLastRefreshTime(getCacheKey(),
+                                        StringUtils.getCurTimeStr());
+                            }
+                            if (isAdded()) {
+                                if (mState == STATE_REFRESH) {
+                                    onRefreshNetworkSuccess();
+                                }
+                            }
                         })
                         .subscribe(mObserver)
         );
@@ -270,15 +277,7 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
 
         @Override
         public void onCompleted() {
-            if (mCurrentPage == 0 && needAutoRefresh()) {
-                ApplicationLoader.putToLastRefreshTime(getCacheKey(),
-                        StringUtils.getCurTimeStr());
-            }
-            if (isAdded()) {
-                if (mState == STATE_REFRESH) {
-                    onRefreshNetworkSuccess();
-                }
-            }
+            executeOnLoadFinish();
         }
 
         @Override
@@ -291,9 +290,20 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
         @Override
         public void onNext(D d) {
             executeOnLoadDataSuccess(d.getList());
-            executeOnLoadFinish();
         }
     };
+
+    private void onHttpException(HttpException httpException) {
+        InputStream is = httpException.response().raw().body().byteStream();
+        try {
+            ResultBean resultBean = XmlUtils.toBean(ResultBean.class, is);
+            if (resultBean != null) {
+                mResult = resultBean.getResult();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /***
      * 判断是否需要读取缓存的数据
