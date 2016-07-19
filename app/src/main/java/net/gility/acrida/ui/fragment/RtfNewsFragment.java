@@ -86,7 +86,7 @@ public class RtfNewsFragment extends InjectListFragment<News, NewsList> implemen
         } else if (mCatalog == NewsList.CATALOG_MONTH) {
             show = "month";
         }
-        return mOSChinaService.getNewsList(mCatalog, mCurrentPage, ApplicationLoader.PAGE_SIZE, show);
+        return mOSChinaService.getNewsList(mCatalog, mCurrentPage, ApplicationLoader.PAGE_SIZE);
     }
 
     @Override

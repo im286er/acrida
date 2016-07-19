@@ -20,8 +20,7 @@ public interface OSChinaService {
     Observable<Result<NewsList>> getNewsList(
             @Query("catalog") int catalog,
             @Query("pageIndex") int pageIndex,
-            @Query("pageSize") int pageSize,
-            @Query("show") String show);
+            @Query("pageSize") int pageSize);
 
     @GET("action/api/blog_list")
     Observable<Result<BlogList>> getBlogList(

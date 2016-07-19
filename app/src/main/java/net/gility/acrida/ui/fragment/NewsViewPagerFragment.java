@@ -23,9 +23,9 @@ public class NewsViewPagerFragment extends BaseViewPagerFragment implements
     protected void onSetupTabAdapter(ViewPageFragmentAdapter adapter) {
         String[] title = getResources().getStringArray(
                 R.array.news_viewpage_arrays);
-        adapter.addTab(title[0], "news", NewsFragment.class,
+        adapter.addTab(title[0], "news", RtfNewsFragment.class,
                 getBundle(NewsList.CATALOG_ALL));
-        adapter.addTab(title[1], "news_week", NewsFragment.class,
+        adapter.addTab(title[1], "news_week", RtfNewsFragment.class,
                 getBundle(NewsList.CATALOG_WEEK));
         adapter.addTab(title[2], "latest_blog", BlogFragment.class,
                 getBundle(BlogList.CATALOG_LATEST));
