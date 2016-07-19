@@ -2,11 +2,10 @@ package net.gility.acrida.dagger;
 
 import net.gility.acrida.android.ApplicationLoader;
 import net.gility.acrida.android.BaseApplication;
-import net.gility.acrida.ui.AppBaseActivity;
 import net.gility.acrida.ui.MainActivity;
-import net.gility.acrida.ui.fragment.InjectListFragment;
 import net.gility.acrida.ui.fragment.RtfBlogFragment;
 import net.gility.acrida.ui.fragment.RtfNewsFragment;
+import net.gility.acrida.ui.fragment.RtfTweetsFragment;
 import net.gility.acrida.ui.fragment.SettingsFragment;
 
 import javax.inject.Singleton;
@@ -24,6 +23,7 @@ import dagger.Component;
                 AppModule.class,
                 ApiModule.class,
                 DataModule.class,
+                NetModule.class,
                 UiModule.class,
                 BindModule.class,
                 UtilsModule.class
@@ -36,4 +36,5 @@ public interface AppComponent {
     void inject(SettingsFragment settingsFragment);
     void inject(RtfNewsFragment rtfNewsFragment);
     void inject(RtfBlogFragment rtfBlogFragment);
+    void inject(RtfTweetsFragment rtfTweetsFragment);
 }

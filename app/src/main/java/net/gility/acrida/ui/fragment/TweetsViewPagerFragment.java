@@ -23,11 +23,11 @@ public class TweetsViewPagerFragment extends BaseViewPagerFragment implements
 
         String[] title = getResources().getStringArray(
                 R.array.tweets_viewpage_arrays);
-        adapter.addTab(title[0], "new_tweets", TweetsFragment.class,
+        adapter.addTab(title[0], "new_tweets", RtfTweetsFragment.class,
                 getBundle(TweetsList.CATALOG_LATEST));
-        adapter.addTab(title[1], "hot_tweets", TweetsFragment.class,
+        adapter.addTab(title[1], "hot_tweets", RtfTweetsFragment.class,
                 getBundle(TweetsList.CATALOG_HOT));
-        adapter.addTab(title[2], "my_tweets", TweetsFragment.class,
+        adapter.addTab(title[2], "my_tweets", RtfTweetsFragment.class,
                 getBundle(TweetsList.CATALOG_ME));
     }
 

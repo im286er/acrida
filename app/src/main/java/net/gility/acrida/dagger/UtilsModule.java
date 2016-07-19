@@ -1,10 +1,7 @@
 package net.gility.acrida.dagger;
 
 import net.gility.acrida.android.ApplicationLoader;
-import net.gility.acrida.manager.AppManager;
 import net.gility.acrida.ui.help.DoubleClickExitHelper;
-
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
