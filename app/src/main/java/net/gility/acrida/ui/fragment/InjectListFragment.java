@@ -241,7 +241,7 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
                 @Override
                 public void onNext(Result<D> dResult) {
                     D data = dResult.response().body();
-                    if (data != null) child.onNext(data);
+                    if (data != null && data.getList() != null) child.onNext(data);
                     child.onError(new HttpException(dResult.response()));
                 }
             };
