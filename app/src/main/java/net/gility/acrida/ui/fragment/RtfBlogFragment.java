@@ -7,14 +7,11 @@ import android.widget.AdapterView;
 import net.gility.acrida.content.Blog;
 import net.gility.acrida.content.BlogList;
 import net.gility.acrida.dagger.Injector;
-import net.gility.acrida.network.OSChinaApi;
 import net.gility.acrida.network.OSChinaService;
 import net.gility.acrida.ui.adapter.BlogAdapter;
 import net.gility.acrida.ui.help.OnTabReselectListener;
 import net.gility.acrida.utils.UIHelper;
-import net.gility.acrida.utils.XmlUtils;
 
-import java.io.InputStream;
 import java.io.Serializable;
 
 import javax.inject.Inject;
@@ -70,19 +67,8 @@ public class RtfBlogFragment extends InjectListFragment<Blog, BlogList> implemen
     }
 
     @Override
-    protected BlogList parseList(InputStream is) throws Exception {
-        BlogList list = XmlUtils.toBean(BlogList.class, is);
-        return list;
-    }
-
-    @Override
     protected BlogList readList(Serializable seri) {
         return ((BlogList) seri);
-    }
-
-    @Override
-    protected void sendRequestData() {
-        OSChinaApi.getBlogList(blogType, mCurrentPage, mHandler);
     }
 
     @Override

@@ -31,7 +31,6 @@ import net.gility.acrida.utils.UIHelper;
 import net.gility.acrida.utils.XmlUtils;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.Serializable;
 
 import javax.inject.Inject;
@@ -145,27 +144,8 @@ public class RtfTweetsFragment extends InjectListFragment<Tweet, TweetsList> imp
     }
 
     @Override
-    protected TweetsList parseList(InputStream is) throws Exception {
-        TweetsList list = XmlUtils.toBean(TweetsList.class, is);
-        return list;
-    }
-
-    @Override
     protected TweetsList readList(Serializable seri) {
         return ((TweetsList) seri);
-    }
-
-    @Override
-    protected void sendRequestData() {
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            String str = bundle.getString("topic");
-            if (str != null) {
-                OSChinaApi.getTweetTopicList(mCurrentPage, str, mHandler);
-                return;
-            }
-        }
-        OSChinaApi.getTweetList(mCatalog, mCurrentPage, mHandler);
     }
 
     @Override

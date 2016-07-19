@@ -15,15 +15,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.gility.acrida.R;
 import net.gility.acrida.android.ApplicationLoader;
 import net.gility.acrida.content.Entity;
 import net.gility.acrida.content.ListEntity;
 import net.gility.acrida.content.ResultBean;
-import net.gility.acrida.dagger.Injector;
-import net.gility.acrida.network.OSChinaService;
 import net.gility.acrida.storage.CacheManager;
 import net.gility.acrida.ui.adapter.ListBaseAdapter;
 import net.gility.acrida.ui.widget.StateView;
@@ -32,18 +28,14 @@ import net.gility.acrida.utils.TDevice;
 import net.gility.acrida.utils.ThemeSwitchUtils;
 import net.gility.acrida.utils.XmlUtils;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cz.msebera.android.httpclient.Header;
 import retrofit2.adapter.rxjava.HttpException;
 import retrofit2.adapter.rxjava.Result;
 import rx.Observable;
@@ -75,8 +67,7 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
     // 错误信息
     protected net.gility.acrida.content.Result mResult;
 
-    private AsyncTask<String, Void, ListEntity<T>> mCacheTask;
-    private ParserTask mParserTask;
+    private AsyncTask<String, Void, D> mCacheTask;
     private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
 
     @Override
@@ -158,7 +149,6 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
     @Override
     public void onDestroy() {
         cancelReadCacheTask();
-        cancelParserTask();
         mCompositeSubscription.unsubscribe();
         super.onDestroy();
     }
@@ -189,11 +179,7 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
 
     protected abstract Observable<Result<D>> obtainData();
 
-    protected ListEntity<T> parseList(InputStream is) throws Exception {
-        return null;
-    }
-
-    protected ListEntity<T> readList(Serializable object) {
+    protected D readList(Serializable object) {
         return null;
     }
 
@@ -384,7 +370,7 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
         }
     }
 
-    private class ReadCacheTask extends AsyncTask<String, Void, ListEntity<T>> {
+    private class ReadCacheTask extends AsyncTask<String, Void, D> {
         private final WeakReference<Context> mContextReference;
 
         private ReadCacheTask(Context context) {
@@ -392,7 +378,7 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
         }
 
         @Override
-        protected ListEntity<T> doInBackground(String... params) {
+        protected D doInBackground(String... params) {
             Serializable object = CacheManager.readObject(mContextReference.get(), params[0]);
             if (object == null) {
                 return null;
@@ -402,7 +388,7 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
         }
 
         @Override
-        protected void onPostExecute(ListEntity<T> list) {
+        protected void onPostExecute(D list) {
             super.onPostExecute(list);
             if (list != null) {
                 executeOnLoadDataSuccess(list.getList());
@@ -430,32 +416,6 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
             return null;
         }
     }
-
-    protected AsyncHttpResponseHandler mHandler = new AsyncHttpResponseHandler() {
-
-        @Override
-        public void onSuccess(int statusCode, Header[] headers,
-                              byte[] responseBytes) {
-            if (mCurrentPage == 0 && needAutoRefresh()) {
-                ApplicationLoader.putToLastRefreshTime(getCacheKey(),
-                        StringUtils.getCurTimeStr());
-            }
-            if (isAdded()) {
-                if (mState == STATE_REFRESH) {
-                    onRefreshNetworkSuccess();
-                }
-                executeParserTask(responseBytes);
-            }
-        }
-
-        @Override
-        public void onFailure(int arg0, Header[] arg1, byte[] arg2,
-                              Throwable arg3) {
-            if (isAdded()) {
-                readCacheData(getCacheKey());
-            }
-        }
-    };
 
     protected void executeOnLoadDataSuccess(List<T> data) {
         if (data == null) {
@@ -566,61 +526,6 @@ public abstract class InjectListFragment<T extends Entity, D extends ListEntity<
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(false);
             mSwipeRefreshLayout.setEnabled(true);
-        }
-    }
-
-    private void executeParserTask(byte[] data) {
-        cancelParserTask();
-        mParserTask = new ParserTask(data);
-        mParserTask.execute();
-    }
-
-    private void cancelParserTask() {
-        if (mParserTask != null) {
-            mParserTask.cancel(true);
-            mParserTask = null;
-        }
-    }
-
-    class ParserTask extends AsyncTask<Void, Void, String> {
-
-        private final byte[] reponseData;
-        private boolean parserError;
-        private List<T> list;
-
-        public ParserTask(byte[] data) {
-            this.reponseData = data;
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                ListEntity<T> data = parseList(new ByteArrayInputStream(reponseData));
-                saveCacheData(getCacheKey(), data);
-                list = data.getList();
-                if (list == null) {
-                    ResultBean resultBean = XmlUtils.toBean(ResultBean.class, reponseData);
-                    if (resultBean != null) {
-                        mResult = resultBean.getResult();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                parserError = true;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (parserError) {
-                readCacheData(getCacheKey());
-            } else {
-                executeOnLoadDataSuccess(list);
-                executeOnLoadFinish();
-            }
         }
     }
 
