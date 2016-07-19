@@ -22,6 +22,8 @@ import net.gility.acrida.android.ApplicationLoader;
 import net.gility.acrida.content.Entity;
 import net.gility.acrida.content.ListEntity;
 import net.gility.acrida.content.ResultBean;
+import net.gility.acrida.dagger.Injector;
+import net.gility.acrida.network.OSChinaService;
 import net.gility.acrida.storage.CacheManager;
 import net.gility.acrida.ui.adapter.ListBaseAdapter;
 import net.gility.acrida.ui.widget.StateView;
@@ -36,6 +38,8 @@ import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

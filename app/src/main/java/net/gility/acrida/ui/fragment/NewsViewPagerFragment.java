@@ -27,9 +27,9 @@ public class NewsViewPagerFragment extends BaseViewPagerFragment implements
                 getBundle(NewsList.CATALOG_ALL));
         adapter.addTab(title[1], "news_week", RtfNewsFragment.class,
                 getBundle(NewsList.CATALOG_WEEK));
-        adapter.addTab(title[2], "latest_blog", BlogFragment.class,
+        adapter.addTab(title[2], "latest_blog", RtfBlogFragment.class,
                 getBundle(BlogList.CATALOG_LATEST));
-        adapter.addTab(title[3], "recommend_blog", BlogFragment.class,
+        adapter.addTab(title[3], "recommend_blog", RtfBlogFragment.class,
                 getBundle(BlogList.CATALOG_RECOMMEND));
     }
 
